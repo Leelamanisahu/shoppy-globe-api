@@ -5,8 +5,8 @@ export const getProduct = async(req,res,next)=>{
         const product = await Product.find();
         return res.status(200).json(product);
     } catch (error) {
-        return res.status(404).json(error)
-    }
+        next(error)
+        }
 }
 
 
@@ -20,7 +20,7 @@ export const getOneProduct = async(req,res,next)=>{
         const isProduct = await Product.findById(id);
         return res.status(200).json(isProduct);
     } catch (error) {
-        return res.status(500).json(error)
+        next(error)
     }
 }
 
@@ -41,7 +41,7 @@ export const uploadProduct = async(req,res,next)=>{
         await product.save();
         return res.status(200).json(product);
     } catch (error) {
-        return res.status(400).json(error);
+        next(error)
     }
 }
 
@@ -57,7 +57,7 @@ export const updateProduct = async(req,res,next)=>{
         return res.status(200).json(newProduct);
     }
     catch (error) {
-        return res.status(500).json(error);
+        next(error)
     }
 } 
 
