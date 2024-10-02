@@ -1,14 +1,15 @@
-// Custom error handler middleware
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack); // Log the error stack for debugging
-  
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode; // If no specific status, default to 500
-    res.status(statusCode);
-  
-    res.json({
-      message: err.message,
+    // Log the error details for debugging purposes
+    console.error(`[Error] ${err.message}\nStack: ${err.stack}`);
+
+   
+    const statusCode = err.statusCode || 500;
+
+    res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message: err.message || 'Internal Server Error',
     });
-  };
-  
-  export  default errorHandler;
-  
+};
+
+export default errorHandler;

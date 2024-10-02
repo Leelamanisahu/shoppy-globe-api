@@ -29,7 +29,7 @@ export const login = async(req,res,next)=>{
         if(!passCheck){
             return res.status(400).json({message:"Password Missmatch"});
         }
-        const token = jwt.sign({id:user._id},"SECRETEKEY",{expiresIn:"15m"})
+        const token = jwt.sign({id:user._id},"SECRETEKEY",{expiresIn:"30m"})
         
         return res.status(200).json({ _id: user._id,
             email: user.email,

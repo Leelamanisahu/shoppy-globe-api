@@ -1,6 +1,9 @@
 import Cart  from "../models/cart.js";
 import Product from "../models/product.js";
 
+
+// add new procudt in the cart
+// if the product were already in the cart then just increase the qunatity by 1,
 export const addToCart = async(req,res,next)=>{
     try {
         const userId = req.user.id;
@@ -33,6 +36,9 @@ export const addToCart = async(req,res,next)=>{
     }
 }
 
+
+// increase the qunatity of the cart product by given the extra qunatity
+// existing quantity + give quantity
 export const increaseCart = async(req,res,next)=>{
         try {
             const userId = req.user.id;
@@ -44,10 +50,12 @@ export const increaseCart = async(req,res,next)=>{
             let cart = await Cart.findOne({userId});
             let productIndex 
             if(cart){
-                productIndex   = cart.items.findIndex((item=>item.product.toString() == productId));
+                productIndex  = cart.items.findIndex((item=>item.product.toString() == productId));
     
                 if(productIndex > -1){
                     cart.items[productIndex].quantity += quantity ;
+                }else{
+                    return res.status(401).json({message:"Product were not found in the cart"})
                 }
             }
             await cart.save();
@@ -59,17 +67,17 @@ export const increaseCart = async(req,res,next)=>{
 }
 
 
+// get all the details of the cart of the user that has been loged in
 export const getCart = async (req, res, next) => {
     try {
-      const userId = req.user.id; // Assuming the user is authenticated
+      const userId = req.user.id;
         
       // Find the user's cart and populate the product details
-      const cart = await Cart.findOne({ userId }).populate('items.product', 'name price description');
+      const cart = await Cart.findOne({ userId }).populate('items.product','name price description');
   
       if (!cart) {
         return res.status(404).json({ message: 'Cart not found' });
       }
-  
       res.json(cart);
     } catch (error) {
       next(error);
@@ -77,13 +85,14 @@ export const getCart = async (req, res, next) => {
   };
 
 
+//   remove specific product from the 
 export const removeProduct = async(req,res,next)=>{
     try {
         const userId = req.user.id;
         const productId = req.params.id;
         const cart = await Cart.findOne({userId});
         if(!cart){
-            return res.status(401),json({message:"nothing here"})
+            return res.status(401).json({message:"nothing here"})
         }
         let newCart = cart.items.filter((item)=>item.product.toString() != productId);
         cart.items = newCart;
@@ -94,6 +103,7 @@ export const removeProduct = async(req,res,next)=>{
     }
 }
 
+// empty the entire cart 
 export const emptyCart = async(req,res,next)=>{
     try {
         const {id} = req.params;
