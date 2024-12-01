@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "shoppy-globe-api",
+      "script": "server.js", // Replace with your main entry point
+      "instances": "max",   // Max instances for load balancing
+      "exec_mode": "cluster", // Enables clustering
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
